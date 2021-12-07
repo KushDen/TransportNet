@@ -83,7 +83,7 @@ class Model:
             oracle = phi_big_oracle  
             prox = h_oracle.prox
         else:
-            print('Non-composite optimization...')
+            #print('Non-composite optimization...')
             oracle = phi_big_oracle + h_oracle
             def prox_func(grad, point, A):
                 """
@@ -93,7 +93,7 @@ class Model:
                 """
                 return np.maximum(point - grad / A, self.graph.freeflow_times)
             prox = prox_func
-        print('Oracles created...')
+        #print('Oracles created...')
         print(starting_msg)
         
         if solver_name == 'fwm':
