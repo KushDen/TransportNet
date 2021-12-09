@@ -5,7 +5,7 @@ from history import History
 def universal_similar_triangles_method(oracle, prox, primal_dual_oracle,
                                        t_start, L_init = None, max_iter = 1000,
                                        eps = 1e-5, eps_abs = None, stop_crit = 'dual_gap_rel',
-                                       verbose_step = 100, verbose = False, save_history = False):
+                                       verbose_step = 100, verbose = False, save_history = False, times_flows_save_step = 100):
     if stop_crit == 'dual_gap_rel':
         def crit():
             return duality_gap <= eps * duality_gap_init
@@ -33,8 +33,10 @@ def universal_similar_triangles_method(oracle, prox, primal_dual_oracle,
     flows_weighted = primal_dual_oracle.get_flows(y_start) 
     primal, dual, duality_gap_init, state_msg = primal_dual_oracle(flows_weighted, y_start)
     if save_history:
+        times_flows_history = History('times', 'flows', 'iter', 'inner_iters')
         history = History('iter', 'primal_func', 'dual_func', 'dual_gap', 'inner_iters')
         history.update(0, primal, dual, duality_gap_init, 0)
+        times_flows_history.update(t, flows_weighted, 0, 0)
     if verbose:
         print(state_msg)
     if eps_abs is None:
@@ -76,6 +78,8 @@ def universal_similar_triangles_method(oracle, prox, primal_dual_oracle,
         primal, dual, duality_gap, state_msg = primal_dual_oracle(flows_weighted, t)
         if save_history:
             history.update(it_counter, primal, dual, duality_gap, inner_iters_num)
+            if it_counter % times_flows_save_step == 0:
+                times_flows_history.update(t, flows_weighted, it_counter, inner_iters_num)
         if verbose and (it_counter % verbose_step == 0):
             print('\nIterations number: {:d}'.format(it_counter))
             print('Inner iterations number: {:d}'.format(inner_iters_num))
@@ -89,6 +93,7 @@ def universal_similar_triangles_method(oracle, prox, primal_dual_oracle,
               'res_msg': 'success' if success else 'iterations number exceeded'}
     if save_history:
         result['history'] = history.dict
+        result['times_flows_history'] = times_flows_history.dict
     if verbose:
         print('\nResult: ' + result['res_msg'])
         print('Total iters: ' + str(it_counter))

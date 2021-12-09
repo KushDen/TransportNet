@@ -5,7 +5,7 @@ from history import History
 def frank_wolfe_method(oracle, primal_dual_oracle,
                        t_start, max_iter = 1000,
                        eps = 1e-5, eps_abs = None, stop_crit = 'dual_gap_rel',
-                       verbose_step = 100, verbose = False, save_history = False):
+                       verbose_step = 100, verbose = False, save_history = False, times_flows_save_step = 100):
     if stop_crit == 'dual_gap_rel':
         def crit():
             return duality_gap <= eps * duality_gap_init
@@ -26,8 +26,10 @@ def frank_wolfe_method(oracle, primal_dual_oracle,
     
     primal, dual, duality_gap_init, state_msg = primal_dual_oracle(flows, t_weighted) 
     if save_history:
-        history = History('iter', 'primal_func', 'dual_func', 'dual_gap')
+        times_flows_history = History('times', 'flows', 'iter')
+        history = History('times', 'flows', 'iter', 'primal_func', 'dual_func', 'dual_gap')
         history.update(0, primal, dual, duality_gap_init)
+        times_flows_history.update(t_weighted, flows, 0)
     if verbose:
         print(state_msg) 
     if eps_abs is None:
@@ -44,6 +46,8 @@ def frank_wolfe_method(oracle, primal_dual_oracle,
         primal, dual, duality_gap, state_msg  = primal_dual_oracle(flows, t_weighted)
         if save_history:
             history.update(it_counter, primal, dual, duality_gap)
+            if it_counter % times_flows_save_step == 0:
+                times_flows_history.update(t_weighted, flows, it_counter)
         if verbose and (it_counter % verbose_step == 0):
             print('\nIterations number: {:d}'.format(it_counter))
             print(state_msg, flush = True)
@@ -56,6 +60,7 @@ def frank_wolfe_method(oracle, primal_dual_oracle,
               'res_msg' : 'success' if success else 'iterations number exceeded'}
     if save_history:
         result['history'] = history.dict
+        result['times_flows_history'] = times_flows_history.dict
     if verbose:
         print('\nResult: ' + result['res_msg'])
         print('Total iters: ' + str(it_counter))
