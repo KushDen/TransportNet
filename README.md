@@ -5,11 +5,17 @@
 
 ## Результаты проекта 
 Эксперимент с различными точками старта и проверка чувствительности метода находится в ноутбуке Stable Dynamic & Beckman/Anaheim_Beckmann_Experiments_sensitive_starting_point.ipynb
+
 Эксперимент с методом стартером и методом доводчиком находится в Stable Dynamic & Beckman/Anaheim_Beckmann_new_start.ipynb
+
 Для загрузки результатов через pickle можно воспользоваться сохраненными данными с дисков:
+
 local_results.txt - https://drive.google.com/file/d/1MjfvvUzq2RXSdzZjlpnYLhoCmTU_FVVH/view?usp=sharing
+
 local_results_depth - https://drive.google.com/file/d/1K9ENxQfvQ9DtvP-77YrYrvrgxZAGM7nZ/view?usp=sharing
+
 initial_results - https://drive.google.com/file/d/1sIoghC1pwwR0c0Wmbw5wlUeOgUtmhrS3/view?usp=sharing
+
 anaheim_result_new_start_beckmann.pickle - https://drive.google.com/file/d/112MJC2s5D8ovTfYpxRC4KHX3tj4tqHQA/view?usp=sharing
 
 
